@@ -1,0 +1,22 @@
+# Cloudflare fronts the Railway deployment: DNS + SSL + caching rules live in
+# Cloudflare, while the app itself runs on Railway. Cloudflare Workers are NOT
+# used to run this app — Workbase is a Node/Express server and needs the
+# long-lived process + database that Railway provides.
+#
+# How the pieces fit:
+#   app.your-domain.com  --(Cloudflare proxy, SSL: Full (strict))-->  <your-app>.up.railway.app
+#
+# Setup summary (full steps in DEPLOY.md):
+#   1. Add your domain to Cloudflare and point DNS at Cloudflare's nameservers.
+#   2. In Railway, add the custom domain app.your-domain.com to the app service.
+#   3. In Cloudflare DNS, create a CNAME:  app  ->  <your-app>.up.railway.app  (proxied, orange cloud).
+#   4. Cloudflare SSL/TLS mode: Full (strict). Railway issues its own cert for the custom domain.
+#   5. Do NOT cache HTML or /api/* at the edge (Page Rule / Cache Rule: bypass cache for /api/*).
+#
+# This file is kept so the repo documents the Cloudflare side of the deployment
+# in one place; `wrangler deploy` is not part of this app's pipeline.
+name = "workbase-city"
+compatibility_date = "2024-11-01"
+
+# Placeholder only — no Worker script is deployed for Workbase.
+# workers_dev = false
